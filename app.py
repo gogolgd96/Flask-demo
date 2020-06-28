@@ -1,17 +1,27 @@
 #pythgon flask app
 
+#pythgon flask app
+
 from flask import Flask, request, render_template, url_for
+import json
+import os.path
 from flask_sqlalchemy import SQLAlchemy
 app=Flask(__name__)
-@app.route('/')
+#app.config('SQLALCHEMY_TRACK_MODIFICATIONS')=False 
+#app.config['SQLALCHEMY_DATABASE_URI']=
+@app.route('/',methods=['GET','POST'])
 def welcome():
-	return render_template('index.html')
+	name=''
+	pas=''
+	if request.method=='POST' and 'username' in request.form:
+		name=request.form.get('username')
+		if name=="Admin":
+			pas=request.form.get("password")
+			if pas=="Admin":
+				return render_template('update_patient.html')
 
-@app.route('/method',methods=['GET','POST'])
-def method():
-	if request.method=='POST':
-		return "You are using a post method"
-	else:
-		return "You are using a Get Method"
+	return render_template('index.html',name=name)
 
-app.run()
+@app.route('/updatepatient')
+def update_patient():
+	return render_template('update_patient.html')
